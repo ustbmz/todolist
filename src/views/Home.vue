@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <router-link class="nav-link active" to="/add">添加代办</router-link>
+              <router-link class="nav-link" to="/add">添加代办</router-link>
             </li>
             <li class="nav-item">
               <router-link class="nav-link" to="/done">已完成</router-link>

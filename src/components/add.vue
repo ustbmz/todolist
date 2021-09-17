@@ -11,10 +11,11 @@
         />
       </div>
       <div class="col-4">
-        <select class="form-control">
-          <option value="">请选择以过滤</option>
-          <option value="">已完成</option>
-          <option value="">已删除</option>
+        <select class="form-control" v-model="filterState">
+          <option :value="TodoItemState.ALL">请选择以过滤</option>
+          <option :value="TodoItemState.OPEN">待办中</option>
+          <option :value="TodoItemState.DONE">已完成</option>
+          <option :value="TodoItemState.DELETE">已删除</option>
         </select>
       </div>
     </div>
@@ -24,6 +25,8 @@
       v-for="item in todolist"
       :key="'item' + item.id"
       class="list-group-item d-flex align-item-center justify-content-between"
+      :class="[{'text-black-50 read-line': item.state === TodoItemState.DELETE},
+      {'green-line': item.state === TodoItemState.DONE}]"
       @click.stop="check(item)"
     >
       <div class="form-check">
@@ -38,9 +41,9 @@
         <label
           :for="item.id"
           @click.stop.prevent="check(item)"
-          :class="{
+          :class="[{
             'text-black-50 line-through': item.state === TodoItemState.DONE
-          }"
+          }]"
         >
           {{ item }}
         </label>
@@ -56,6 +59,11 @@
       </div>
     </li>
   </div>
+  <div>
+    <button  class="float-right btn btn btn-danger mt-4" @click="togger()">
+      {{ filterState === TodoItemState.ALL ? '隐藏已完成' : '全部展示' }}
+    </button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -67,11 +75,19 @@ import { computed, defineComponent, ref } from 'vue'
 export default defineComponent({
   setup () {
     const todoStr = ref('')
+    const filterState = ref(TodoItemState.ALL)
 
     const add = () => {
       console.log(todoStr.value)
       store.commit('add', todoStr.value)
       todoStr.value = ''
+    }
+
+    const filterItem = (value:TodoItemState) => {
+      if (value === TodoItemState.ALL) {
+        return store.state.todos
+      }
+      return store.state.todos.filter((item) => item.state === value)
     }
 
     const check = (item: todoItem) => {
@@ -83,21 +99,34 @@ export default defineComponent({
       store.commit('remove', id)
     }
 
+    const togger = () => {
+      filterState.value === TodoItemState.ALL ? filterState.value = TodoItemState.OPEN : filterState.value = TodoItemState.ALL
+    }
     return {
       add,
       todoStr,
-      todolist: computed(() => store.state.todos),
+      todolist: computed(() => filterItem(filterState.value)),
       TodoItemState,
       check,
-      remove
+      remove,
+      filterState,
+      togger
     }
   }
 })
 </script>
 
 <style lang="scss" scoped>
+.green-line{
+  background-color: #20c997 ;
+  opacity: 0,2;
+}
 .line-through {
   text-decoration: line-through;
+}
+.read-line{
+  background-color: #dc3545 ;
+  opacity: 0,2;
 }
 .list-group-item {
   user-select: none;
