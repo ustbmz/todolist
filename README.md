@@ -1,4 +1,4 @@
-# todolist
+# Todolist
 ## 使用vue3新特性,实现一个简单的待办事项Demo
 
 ## Project setup
