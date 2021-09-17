@@ -1,7 +1,7 @@
-import { TodoItemState } from './const';
+import { TodoItemState } from './const'
 
-export interface todoItem {
-  id: string,
-  text: string,
+export interface TodoItem {
+  id: string
+  text: string
   state: TodoItemState
 }

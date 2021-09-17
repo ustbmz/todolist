@@ -25,8 +25,10 @@
       v-for="item in todolist"
       :key="'item' + item.id"
       class="list-group-item d-flex align-item-center justify-content-between"
-      :class="[{'text-black-50 read-line': item.state === TodoItemState.DELETE},
-      {'green-line': item.state === TodoItemState.DONE}]"
+      :class="[
+        { 'text-black-50 read-line': item.state === TodoItemState.DELETE },
+        { 'green-line': item.state === TodoItemState.DONE }
+      ]"
       @click.stop="check(item)"
     >
       <div class="form-check">
@@ -41,11 +43,14 @@
         <label
           :for="item.id"
           @click.stop.prevent="check(item)"
-          :class="[{
-            'text-black-50 line-through': item.state === TodoItemState.DONE
-          }]"
+          class="ml-4"
+          :class="[
+            {
+              'text-black-50 line-through': item.state === TodoItemState.DONE
+            }
+          ]"
         >
-          {{ item }}
+          {{ item.text }}
         </label>
       </div>
       <div
@@ -60,7 +65,7 @@
     </li>
   </div>
   <div>
-    <button  class="float-right btn btn btn-danger mt-4" @click="togger()">
+    <button class="float-right btn btn btn-danger mt-4" @click="togger()">
       {{ filterState === TodoItemState.ALL ? '隐藏已完成' : '全部展示' }}
     </button>
   </div>
@@ -68,7 +73,7 @@
 
 <script lang="ts">
 import { TodoItemState } from '@/common/const'
-import { todoItem } from '@/common/interface'
+import { TodoItem } from '@/common/interface'
 import store from '@/store'
 import { computed, defineComponent, ref } from 'vue'
 
@@ -83,15 +88,18 @@ export default defineComponent({
       todoStr.value = ''
     }
 
-    const filterItem = (value:TodoItemState) => {
+    const filterItem = (value: TodoItemState) => {
       if (value === TodoItemState.ALL) {
         return store.state.todos
       }
-      return store.state.todos.filter((item) => item.state === value)
+      return store.state.todos.filter(item => item.state === value)
     }
 
-    const check = (item: todoItem) => {
-      if (item.state === TodoItemState.OPEN || item.state === TodoItemState.DONE) {
+    const check = (item: TodoItem) => {
+      if (
+        item.state === TodoItemState.OPEN ||
+        item.state === TodoItemState.DONE
+      ) {
         store.commit('check', item.id)
       }
     }
@@ -100,7 +108,9 @@ export default defineComponent({
     }
 
     const togger = () => {
-      filterState.value === TodoItemState.ALL ? filterState.value = TodoItemState.OPEN : filterState.value = TodoItemState.ALL
+      filterState.value === TodoItemState.ALL
+        ? (filterState.value = TodoItemState.OPEN)
+        : (filterState.value = TodoItemState.ALL)
     }
     return {
       add,
@@ -117,16 +127,16 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.green-line{
-  background-color: #20c997 ;
-  opacity: 0,2;
+.green-line {
+  background-color: #20c997;
+  opacity: 0, 2;
 }
 .line-through {
   text-decoration: line-through;
 }
-.read-line{
-  background-color: #dc3545 ;
-  opacity: 0,2;
+.read-line {
+  background-color: #dc3545;
+  opacity: 0, 2;
 }
 .list-group-item {
   user-select: none;
