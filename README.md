@@ -1,6 +1,10 @@
 # Todolist
 ## 使用vue3新特性,实现一个简单的待办事项Demo
 
+预览地址 ： http://121.36.201.245:11888
+
+
+
 ## Project setup
 ```
 npm install
